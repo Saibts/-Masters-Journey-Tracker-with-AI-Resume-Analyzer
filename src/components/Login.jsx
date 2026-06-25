@@ -156,12 +156,12 @@ export default function Login({ onLogin }) {
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
             <label htmlFor="userId" style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-              {mode === 'register' ? 'Choose a Unique User ID' : 'Enter Your Private User ID'}
+              {mode === 'register' ? 'Register: Choose a Unique (Non-Existing) User ID' : 'Sign In: Enter Your Registered User ID'}
             </label>
             <input
               id="userId"
               type="text"
-              placeholder={mode === 'register' ? 'Choose username...' : 'Enter your unique profile key...'}
+              placeholder={mode === 'register' ? 'Choose new unique ID...' : 'Enter your registered ID...'}
               value={userIdInput}
               onChange={(e) => {
                 setUserIdInput(e.target.value);
@@ -185,12 +185,12 @@ export default function Login({ onLogin }) {
 
           <div className="form-group">
             <label htmlFor="password" style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-              Password
+              {mode === 'register' ? 'Create Password' : 'Password'}
             </label>
             <input
               id="password"
               type="password"
-              placeholder="Enter password..."
+              placeholder={mode === 'register' ? 'Create a secure password...' : 'Enter your password...'}
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
@@ -219,7 +219,7 @@ export default function Login({ onLogin }) {
               <input
                 id="confirmPassword"
                 type="password"
-                placeholder="Confirm password..."
+                placeholder="Confirm your password..."
                 value={confirmPassword}
                 onChange={(e) => {
                   setConfirmPassword(e.target.value);
@@ -264,7 +264,7 @@ export default function Login({ onLogin }) {
               transition: 'all 0.2s'
             }}
           >
-            {mode === 'login' ? 'Sign In' : 'Create Profile'}
+            {mode === 'login' ? 'Sign In' : 'Register & Create Profile'}
           </button>
         </form>
 
