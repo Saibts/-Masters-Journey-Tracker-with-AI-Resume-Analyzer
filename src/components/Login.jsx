@@ -5,6 +5,8 @@ const STORAGE_KEY = 'masters-journey-tracker';
 export default function Login({ onLogin }) {
   const [mode, setMode] = useState('login'); // 'login' or 'register'
   const [userIdInput, setUserIdInput] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = (e) => {
@@ -19,17 +21,37 @@ export default function Login({ onLogin }) {
       return;
     }
 
+    if (!password) {
+      setError('Please enter a password');
+      return;
+    }
+
     const storageKeyForUser = `${STORAGE_KEY}_${trimmed}`;
-    const userExists = localStorage.getItem(storageKeyForUser) !== null;
+    const rawData = localStorage.getItem(storageKeyForUser);
+    const userExists = rawData !== null;
+
+    let parsedData = null;
+    if (userExists) {
+      try {
+        parsedData = JSON.parse(rawData);
+      } catch (err) {
+        // Fallback for malformed data
+      }
+    }
 
     if (mode === 'register') {
       if (userExists) {
         setError('already taken try another id');
         return;
       }
+      if (password !== confirmPassword) {
+        setError('Passwords do not match');
+        return;
+      }
       
       // Initialize an empty profile object to secure the key in localStorage
       const defaultState = {
+        password: password,
         profile: {
           fullName: '',
           targetTerm: 'Fall 2028',
@@ -46,6 +68,11 @@ export default function Login({ onLogin }) {
       // Sign In mode
       if (!userExists) {
         setError('Profile key not found. Verify your ID or create a new user.');
+        return;
+      }
+      // If user exists and has a password stored, verify it
+      if (parsedData && parsedData.password && parsedData.password !== password) {
+        setError('Incorrect password. Please try again.');
         return;
       }
       onLogin(trimmed);
@@ -68,6 +95,8 @@ export default function Login({ onLogin }) {
               setMode('login');
               setError('');
               setUserIdInput('');
+              setPassword('');
+              setConfirmPassword('');
             }}
             style={{
               flex: 1,
@@ -88,6 +117,8 @@ export default function Login({ onLogin }) {
               setMode('register');
               setError('');
               setUserIdInput('');
+              setPassword('');
+              setConfirmPassword('');
             }}
             style={{
               flex: 1,
@@ -129,15 +160,75 @@ export default function Login({ onLogin }) {
                 padding: '0.75rem',
                 width: '100%',
                 fontSize: '1rem',
-                marginTop: '0.5rem'
+                marginTop: '0.5rem',
+                marginBottom: '1rem'
               }}
             />
-            {error && (
-              <span className="login-error" style={{ color: '#ef4444', fontSize: '0.8rem', marginTop: '0.5rem', display: 'block', fontWeight: 'bold' }}>
-                ⚠️ {error}
-              </span>
-            )}
           </div>
+
+          <div className="form-group">
+            <label htmlFor="password" style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              placeholder="Enter password..."
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setError('');
+              }}
+              className="login-input"
+              style={{
+                background: 'var(--bg-deep)',
+                border: '1px solid var(--border)',
+                borderRadius: '6px',
+                color: 'inherit',
+                padding: '0.75rem',
+                width: '100%',
+                fontSize: '1rem',
+                marginTop: '0.5rem',
+                marginBottom: mode === 'register' ? '1rem' : '0.5rem'
+              }}
+            />
+          </div>
+
+          {mode === 'register' && (
+            <div className="form-group">
+              <label htmlFor="confirmPassword" style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+                Confirm Password
+              </label>
+              <input
+                id="confirmPassword"
+                type="password"
+                placeholder="Confirm password..."
+                value={confirmPassword}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  setError('');
+                }}
+                className="login-input"
+                style={{
+                  background: 'var(--bg-deep)',
+                  border: '1px solid var(--border)',
+                  borderRadius: '6px',
+                  color: 'inherit',
+                  padding: '0.75rem',
+                  width: '100%',
+                  fontSize: '1rem',
+                  marginTop: '0.5rem',
+                  marginBottom: '0.5rem'
+                }}
+              />
+            </div>
+          )}
+
+          {error && (
+            <span className="login-error" style={{ color: '#ef4444', fontSize: '0.8rem', marginTop: '0.5rem', display: 'block', fontWeight: 'bold' }}>
+              ⚠️ {error}
+            </span>
+          )}
 
           <button
             type="submit"
@@ -152,7 +243,7 @@ export default function Login({ onLogin }) {
               fontWeight: 'bold',
               fontSize: '1rem',
               cursor: 'pointer',
-              marginTop: '1rem',
+              marginTop: '1.5rem',
               transition: 'all 0.2s'
             }}
           >
