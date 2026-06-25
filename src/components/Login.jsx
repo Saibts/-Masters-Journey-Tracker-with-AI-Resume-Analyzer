@@ -28,7 +28,18 @@ export default function Login({ onLogin }) {
 
     const storageKeyForUser = `${STORAGE_KEY}_${trimmed}`;
     const rawData = localStorage.getItem(storageKeyForUser);
-    const userExists = rawData !== null;
+    let userExists = rawData !== null;
+    if (!userExists) {
+      try {
+        const rawList = localStorage.getItem('masters-journey-tracker-user-list');
+        if (rawList) {
+          const list = JSON.parse(rawList);
+          if (Array.isArray(list) && list.includes(trimmed)) {
+            userExists = true;
+          }
+        }
+      } catch (err) {}
+    }
 
     let parsedData = null;
     if (userExists) {
