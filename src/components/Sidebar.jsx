@@ -8,7 +8,7 @@ const ALL_NAV_ITEMS = [
   { id: 'tracker', label: 'Application Tracker', icon: '▦' },
 ];
 
-export default function Sidebar({ activeTab, onTabChange, currentUser, onLogout, portal, onSwitchPortal }) {
+export default function Sidebar({ activeTab, onTabChange, currentUser, onLogout, portal, onSwitchPortal, theme, onToggleTheme }) {
   const filteredItems = ALL_NAV_ITEMS.filter((item) => {
     if (portal === 'academic') {
       return ['academic', 'projects', 'dashboard'].includes(item.id);
@@ -62,6 +62,11 @@ export default function Sidebar({ activeTab, onTabChange, currentUser, onLogout,
         {currentUser && (
           <button className="logout-btn" onClick={onSwitchPortal} style={{ background: 'var(--border)', color: 'var(--text-primary)', marginBottom: '0.25rem' }}>
             ⇄ Switch Portal
+          </button>
+        )}
+        {currentUser && (
+          <button className="logout-btn" onClick={onToggleTheme} style={{ background: 'var(--bg-elevated)', color: 'var(--text-primary)', border: '1px solid var(--border)', marginBottom: '0.25rem' }}>
+            {theme === 'dark' ? '☀️ Light Academia' : '🌙 Dark Academia'}
           </button>
         )}
         <p className="storage-badge">💾 LocalStorage Active</p>

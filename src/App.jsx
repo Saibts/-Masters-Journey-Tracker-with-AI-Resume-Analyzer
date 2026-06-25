@@ -27,6 +27,12 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [state, setState] = useState(() => loadState());
   const [matchedColleges, setMatchedColleges] = useState([]);
+  const [theme, setTheme] = useState(() => localStorage.getItem('masters-journey-tracker-theme') || 'dark');
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('masters-journey-tracker-theme', theme);
+  }, [theme]);
 
   const refreshState = useCallback(() => {
     const newState = loadState();
@@ -163,6 +169,8 @@ export default function App() {
         onLogout={handleLogout}
         portal={portal}
         onSwitchPortal={handleSwitchPortal}
+        theme={theme}
+        onToggleTheme={() => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))}
       />
       <main className="main-content">
         <header className="page-header">
