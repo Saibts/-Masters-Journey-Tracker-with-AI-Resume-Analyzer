@@ -1,0 +1,42 @@
+ABOUT: MASTERS & ACADEMICS TRACKER
+
+The Masters & Academics Tracker is a premium, client-side, local-first web application designed for students managing undergraduate coursework and planning higher education journeys abroad. Built with a focus on absolute privacy, security, and a rich vintage aesthetic, it offers a personal workspace that runs entirely in the browser.
+
+========================================================================
+1. CORE PORTALS
+========================================================================
+
+The application splits into two dedicated workspaces, tailored for distinct phases of an academic career:
+
+[A] Undergrad Academic Portal
+Designed to manage current coursework, semester-wise tracking, and undergraduate profiles:
+* Academic Grades & CGPA: Track subject names, credits, and grade points semester-by-semester.
+* Anna University Mapping: Translates letter grades (O, A+, A, B+, B, C) directly into the official grade point system for seamless GPA/CGPA computation.
+* Academic Projects Catalog: Document undergraduate capstone, mini-projects, research projects, role descriptions, and tech stacks.
+* Transcript & Report Card Generator: Generate clean, printable PDF-friendly report cards and transcripts of your academic record.
+
+[B] Master's Journey Tracker
+Designed for higher education planning, international university discovery, and admission tracking:
+* College Discovery: Search and match with major international graduate programs based on your B.E. discipline, CGPA, and country preferences.
+* AI Resume Intelligence: Parse and upload resumes to extract academic keywords, run compatibility matches against target university profiles, and identify key skillset gaps.
+* Active Roadmaps: Follow interactive checklists covering GRE prep, English proficiency tests (IELTS/TOEFL), LOR procurement, and SOP drafting.
+* Application Tracker (Kanban): Track your graduate school applications through a visual board split by status: Interested, In Progress, Submitted, and Decisions.
+* Research Assistant: Integrated scientific lookup to search publications, read literature metadata, and bookmark academic sources.
+
+========================================================================
+2. SECURITY, PRIVACY & LOCAL-FIRST ARCHITECTURE
+========================================================================
+
+* 100% Private Offline Storage: All user profiles, grades, resume keywords, and application statuses are stored strictly inside the browser's localStorage. No data is uploaded to external clouds, ensuring full protection against privacy leaks.
+* Tabbed Security Sign-In: Users register with a unique ID and password.
+* Safe Name Registration: If a user attempts to register a User ID that is already taken locally, the system prevents overwrite and throws the warning: "already taken try another id".
+* Credential Upgrades: Older profiles without passwords automatically prompt password creation upon login to update their local security.
+* Danger Zone Deletion: Dedicated account deletion permanently purges all profile metrics, grades, and application roadmaps from the local browser storage.
+
+========================================================================
+3. THEME & VINTAGE AESTHETICS
+========================================================================
+
+Designed with a focus on rich visual excellence, the application includes a theme toggling feature located in the sidebar:
+* Vintage Dark Academia (Default): Deep, rich mahogany wood backdrops (#110d0a), candlelit parchment text (#eae3cd), and burnished gold accents (#c5a059).
+* Vintage Light Academia (Parchment): Softer tea-stained paper tones (#eae4d3), sepia writing pads (#f4eee1), and walnut-ink lettering (#3c3024) for a bright, glare-free daylight study aesthetic.
