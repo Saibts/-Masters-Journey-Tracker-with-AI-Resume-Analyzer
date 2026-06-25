@@ -20,25 +20,27 @@
   --font-sans: 'Lora', 'Georgia', serif;
   --font-mono: 'Courier New', Courier, monospace;
   --sidebar-width: 260px;
+  --login-bg: radial-gradient(circle at center, #2e221b 0%, var(--bg-deep) 100%);
 }
 
 [data-theme='light'] {
-  --bg-deep: #f7f4eb;
-  --bg-slate: #eedec9;
-  --bg-card: #f2ede0;
-  --bg-elevated: #e8dfcf;
-  --text-primary: #2c221a;
-  --text-secondary: #5c4e3f;
-  --text-muted: #857563;
+  --bg-deep: #eae4d3;
+  --bg-slate: #dfd7c2;
+  --bg-card: #f4eee1;
+  --bg-elevated: #e6dfcc;
+  --text-primary: #3c3024;
+  --text-secondary: #6e5e4d;
+  --text-muted: #968673;
   --accent-teal: #a67c52;
   --accent-teal-dim: #8b6239;
   --accent-teal-glow: rgba(166, 124, 82, 0.15);
-  --border: #d7cbb6;
-  --border-light: #c2b59f;
-  --success: #496350;
+  --border: #d2c8b1;
+  --border-light: #bfb59d;
+  --success: #526f5d;
   --warning: #b37e0e;
-  --purple: #8b5b2e;
-  --shadow: 0 4px 20px rgba(44, 34, 26, 0.15);
+  --purple: #9b6c43;
+  --shadow: 0 4px 20px rgba(50, 40, 30, 0.15);
+  --login-bg: radial-gradient(circle at center, #f5efe2 0%, var(--bg-deep) 100%);
 }
 
 *,
@@ -1217,7 +1219,7 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: radial-gradient(circle at center, #162235 0%, var(--bg-deep) 100%);
+  background: var(--login-bg);
   padding: 1.5rem;
 }
 
