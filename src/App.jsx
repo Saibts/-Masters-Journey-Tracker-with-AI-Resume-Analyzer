@@ -28,6 +28,7 @@ export default function App() {
   const [state, setState] = useState(() => loadState());
   const [matchedColleges, setMatchedColleges] = useState([]);
   const [theme, setTheme] = useState(() => localStorage.getItem('masters-journey-tracker-theme') || 'dark');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -63,6 +64,7 @@ export default function App() {
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     saveActiveTab(tab);
+    setIsSidebarOpen(false);
   };
 
   const handleLogin = (userId) => {
@@ -162,6 +164,7 @@ export default function App() {
 
   return (
     <div className="app">
+      {isSidebarOpen && <div className="sidebar-overlay" onClick={() => setIsSidebarOpen(false)} />}
       <Sidebar
         activeTab={activeTab}
         onTabChange={handleTabChange}
@@ -171,12 +174,19 @@ export default function App() {
         onSwitchPortal={handleSwitchPortal}
         theme={theme}
         onToggleTheme={() => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))}
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
       />
       <main className="main-content">
         <header className="page-header">
-          <h1 className="page-title">
-            {portal === 'academic' ? 'Academic & Projects Portal' : 'My Masters Journey Tracker'}
-          </h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
+            <button className="mobile-menu-btn" onClick={() => setIsSidebarOpen(true)} aria-label="Open navigation">
+              ☰ Menu
+            </button>
+            <h1 className="page-title" style={{ margin: 0 }}>
+              {portal === 'academic' ? 'Academic & Projects Portal' : 'My Masters Journey Tracker'}
+            </h1>
+          </div>
           <p className="page-subtitle">
             {portal === 'academic' 
               ? 'Manage undergrad courses, semester GPA, project portfolios, and transcripts' 
