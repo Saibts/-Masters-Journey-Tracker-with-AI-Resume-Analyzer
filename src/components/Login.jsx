@@ -71,9 +71,15 @@ export default function Login({ onLogin }) {
         return;
       }
       // If user exists and has a password stored, verify it
-      if (parsedData && parsedData.password && parsedData.password !== password) {
-        setError('Incorrect password. Please try again.');
-        return;
+      if (parsedData && parsedData.password) {
+        if (parsedData.password !== password) {
+          setError('Incorrect password. Please try again.');
+          return;
+        }
+      } else if (parsedData) {
+        // Automatically upgrade account with the entered password if none was set previously
+        parsedData.password = password;
+        localStorage.setItem(storageKeyForUser, JSON.stringify(parsedData));
       }
       onLogin(trimmed);
     }
