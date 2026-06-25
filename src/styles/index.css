@@ -2183,3 +2183,19 @@ body {
   border-radius: 4px;
   font-weight: 500;
 }
+
+.portal-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.portal-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--accent-teal) !important;
+  box-shadow: 0 12px 40px rgba(20, 184, 166, 0.2) !important;
+}
+
+.portal-card:nth-child(2):hover {
+  border-color: var(--purple) !important;
+  box-shadow: 0 12px 40px rgba(168, 85, 247, 0.2) !important;
+}
+

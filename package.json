@@ -3,10 +3,14 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "main": "main.cjs",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "electron:dev": "electron . --dev",
+    "electron:start": "electron .",
+    "electron:build": "npm run build && node build-desktop.cjs"
   },
   "dependencies": {
     "pdfjs-dist": "^6.0.227",
@@ -15,6 +19,24 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.4",
+    "electron": "^42.5.0",
+    "electron-builder": "^26.15.3",
+    "electron-packager": "^17.1.2",
     "vite": "^6.0.3"
+  },
+  "build": {
+    "appId": "com.mytracker.app",
+    "productName": "Masters Journey Tracker",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "dist/**/*",
+      "main.cjs",
+      "package.json"
+    ],
+    "win": {
+      "target": "portable"
+    }
   }
 }

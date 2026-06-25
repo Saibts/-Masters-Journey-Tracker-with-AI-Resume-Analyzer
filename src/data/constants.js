@@ -7,8 +7,10 @@ export const FUNDING_OPTIONS = [
 export const COUNTRIES = ['USA', 'UK', 'Germany', 'Switzerland', 'India', 'New Zealand'];
 
 export const DEFAULT_PROFILE = {
+  fullName: '',
   targetTerm: 'Fall 2028',
   currentCourse: 'Robotics and Automation',
+  collegeName: '',
   cgpa: '',
   funding: FUNDING_OPTIONS[0],
   researchInterests: '',

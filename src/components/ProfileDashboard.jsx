@@ -24,7 +24,7 @@ function ProfileField({ label, value, children, isEditing }) {
   );
 }
 
-export default function ProfileDashboard({ state, matchedColleges, onStateChange }) {
+export default function ProfileDashboard({ state, matchedColleges, onStateChange, portal }) {
   const [isEditing, setIsEditing] = useState(false);
   const [form, setForm] = useState(DEFAULT_PROFILE);
   const profile = state.profile;
@@ -129,7 +129,9 @@ export default function ProfileDashboard({ state, matchedColleges, onStateChange
         ) : (
           <div className="profile-readonly">
             <div className="profile-grid">
+              <ProfileField label="Full Name" value={profile.fullName} />
               <ProfileField label="Target Term" value={profile.targetTerm} />
+              <ProfileField label="Undergrad College / University" value={profile.collegeName} />
               <ProfileField label="Current B.E. Course" value={profile.currentCourse} />
               <ProfileField
                 label="CGPA (10-point scale)"
@@ -205,27 +207,50 @@ export default function ProfileDashboard({ state, matchedColleges, onStateChange
           <div className="dashboard-grid">
             <div className="dashboard-card card">
               <h3>📊 Quick Stats</h3>
-              <div className="stats-row">
-                <div className="stat">
-                  <span className="stat-value">{matchedColleges.filter((c) => c.isRecommended).length}</span>
-                  <span className="stat-label">Matched Programs</span>
+              {portal === 'academic' ? (
+                <div className="stats-row">
+                  <div className="stat">
+                    <span className="stat-value">{profile.cgpa || '—'}</span>
+                    <span className="stat-label">Current CGPA</span>
+                  </div>
+                  <div className="stat">
+                    <span className="stat-value">
+                      {Object.keys(profile.semesters || {}).filter(key => (profile.semesters[key] || []).length > 0).length} / 8
+                    </span>
+                    <span className="stat-label">Semesters Loaded</span>
+                  </div>
+                  <div className="stat">
+                    <span className="stat-value">{(profile.projects || []).length}</span>
+                    <span className="stat-label">Academic Projects</span>
+                  </div>
+                  <div className="stat">
+                    <span className="stat-value">{profile.extractedKeywords?.length || 0}</span>
+                    <span className="stat-label">Resume Keywords</span>
+                  </div>
                 </div>
-                <div className="stat">
-                  <span className="stat-value">{state.bookmarks.length}</span>
-                  <span className="stat-label">Bookmarked</span>
+              ) : (
+                <div className="stats-row">
+                  <div className="stat">
+                    <span className="stat-value">{matchedColleges.filter((c) => c.isRecommended).length}</span>
+                    <span className="stat-label">Matched Programs</span>
+                  </div>
+                  <div className="stat">
+                    <span className="stat-value">{state.bookmarks.length}</span>
+                    <span className="stat-label">Bookmarked</span>
+                  </div>
+                  <div className="stat">
+                    <span className="stat-value">{scholarshipMatches.length}</span>
+                    <span className="stat-label">Scholarship Fits</span>
+                  </div>
+                  <div className="stat">
+                    <span className="stat-value">{profile.extractedKeywords?.length || 0}</span>
+                    <span className="stat-label">Resume Keywords</span>
+                  </div>
                 </div>
-                <div className="stat">
-                  <span className="stat-value">{scholarshipMatches.length}</span>
-                  <span className="stat-label">Scholarship Fits</span>
-                </div>
-                <div className="stat">
-                  <span className="stat-value">{profile.extractedKeywords?.length || 0}</span>
-                  <span className="stat-label">Resume Keywords</span>
-                </div>
-              </div>
+              )}
             </div>
 
-            {scholarshipMatches.length > 0 && (
+            {portal !== 'academic' && scholarshipMatches.length > 0 && (
               <div className="dashboard-card card highlight-card">
                 <h3>🏆 High Scholarship Potential</h3>
                 <p className="card-desc">Based on your CGPA ≥ 8.5 and full scholarship preference</p>
@@ -242,32 +267,34 @@ export default function ProfileDashboard({ state, matchedColleges, onStateChange
 
             <StrengthsGapsChecklist profile={profile} />
 
-            <div className="dashboard-card card full-width">
-              <h3>🎯 Top Recommendations</h3>
-              {topMatches.length === 0 ? (
-                <p className="muted">Complete your profile to see recommendations.</p>
-              ) : (
-                <div className="recommendation-grid">
-                  {topMatches.map((college) => (
-                    <div key={college.id} className="recommendation-item">
-                      <div className="rec-header">
-                        <strong>{college.name}</strong>
-                        <span className="match-score">{college.matchScore}% match</span>
+            {portal !== 'academic' && (
+              <div className="dashboard-card card full-width">
+                <h3>🎯 Top Recommendations</h3>
+                {topMatches.length === 0 ? (
+                  <p className="muted">Complete your profile to see recommendations.</p>
+                ) : (
+                  <div className="recommendation-grid">
+                    {topMatches.map((college) => (
+                      <div key={college.id} className="recommendation-item">
+                        <div className="rec-header">
+                          <strong>{college.name}</strong>
+                          <span className="match-score">{college.matchScore}% match</span>
+                        </div>
+                        <p className="rec-program">{college.program} ({college.country})</p>
+                        {college.resumeKeywordHits?.length > 0 && (
+                          <p className="rec-keywords">
+                            Resume match: {college.resumeKeywordHits.join(', ')}
+                          </p>
+                        )}
+                        {college.highScholarshipChance && (
+                          <span className="badge badge-scholarship">High Chance for Fully Funded Scholarship</span>
+                        )}
                       </div>
-                      <p className="rec-program">{college.program} ({college.country})</p>
-                      {college.resumeKeywordHits?.length > 0 && (
-                        <p className="rec-keywords">
-                          Resume match: {college.resumeKeywordHits.join(', ')}
-                        </p>
-                      )}
-                      {college.highScholarshipChance && (
-                        <span className="badge badge-scholarship">High Chance for Fully Funded Scholarship</span>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </>
       )}
@@ -279,6 +306,15 @@ function ProfileForm({ form, handleChange, handleCountryToggle, handleFileUpload
   return (
     <div className="profile-form">
       <div className="form-grid">
+        <div className="form-group">
+          <label>Full Name</label>
+          <input
+            type="text"
+            value={form.fullName || ''}
+            onChange={(e) => handleChange('fullName', e.target.value)}
+            placeholder="e.g., Jane Doe"
+          />
+        </div>
         <div className="form-group">
           <label>Target Term</label>
           <input
@@ -298,6 +334,15 @@ function ProfileForm({ form, handleChange, handleCountryToggle, handleFileUpload
               <option key={opt} value={opt}>{opt}</option>
             ))}
           </select>
+        </div>
+        <div className="form-group">
+          <label>Undergrad College / University</label>
+          <input
+            type="text"
+            value={form.collegeName || ''}
+            onChange={(e) => handleChange('collegeName', e.target.value)}
+            placeholder="e.g., Anna University"
+          />
         </div>
         <div className="form-group">
           <label>CGPA (10-point scale)</label>
