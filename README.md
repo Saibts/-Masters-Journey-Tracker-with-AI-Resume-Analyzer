@@ -1,47 +1,65 @@
-# My Masters Journey Tracker
+# My Masters Journey & Academics Tracker
 
-A private, single-user web application for tracking your masters application journey. All data is stored locally in your browser via **LocalStorage** — nothing is sent to any server.
+A private, local-first React application for tracking your master's application journey abroad while managing your undergraduate academics. All data is processed and stored locally in your browser via **LocalStorage** — your resumes and transcripts are never sent to a server.
 
-## Features
+## Dual-Workspace Portals
 
-- **Profile & Dashboard** — Indian academic system inputs (10-point CGPA, funding preferences, research interests)
-- **Resume Intelligence Engine** — Client-side PDF/TXT parsing with keyword extraction, gap detection, and live match recalculation
-- **College Discovery** — Real-time matching against elite global robotics programs
-- **Active Roadmaps** — Auto-generated timelines based on your graduation year (May 2028)
-- **Application Tracker** — Drag-and-drop Kanban board (Interested → In Progress → Submitted → Decisions)
+When signing in, you can toggle between two separate, integrated workspaces:
 
-### Resume Parsing
+### 1. Undergrad Academic Portal 📈
+*   **GPA/CGPA Tracker**: Manage your academic performance across all **8 semesters**.
+*   **Anna University Grading Mapping**: Toggle between raw marks (%) or letter grades (`O`, `A+`, `A`, `B+`, `B`, `C`, `RA`) that auto-calculate GPA using the university's 10-point scale.
+*   **Academic Projects**: Catalog your capstone and class projects, complete with tech stacks, descriptions, semesters, and GitHub repository links.
+*   **Printable Report Card**: Preview a transcript styled in the app's dark theme, which automatically reformats into a clean monochrome document when printed or saved as a PDF (**Ctrl + P** / **Cmd + P**).
 
-Upload a `.pdf` or `.txt` resume on the dashboard. The app uses `pdfjs-dist` (PDF) and `FileReader` (TXT) to extract text entirely in the browser. It then:
+### 2. Master's Journey Tracker 🌍
+*   **Profile Dashboard**: Setup target terms, funding styles, and standardised test scores (GRE, IELTS, TOEFL).
+*   **Resume Intelligence Engine**: Client-side PDF/TXT parsing with keyword extraction, profile gap detection, and match updates.
+*   **University Matching**: Dynamic matching scores calculated against elite international programs based on CGPA and undergrad major.
+*   **Active Roadmaps**: Automatically generates application timelines based on your graduating year.
+*   **Application Kanban Board**: Drag-and-drop tracker for application statuses (*Interested* → *In Progress* → *Submitted* → *Decisions*).
 
-1. Extracts engineering keywords (Python, ROS, Machine Learning, etc.)
-2. Detects critical gaps (publications, IIT/IISc internships)
-3. Recalculates university match scores and updates LocalStorage
+---
 
-## Quick Start
+## Quick Start (Web Server)
 
-```bash
-npm install
-npm run dev
-```
+1. **Install dependencies**:
+   ```bash
+   npm install
+   ```
 
-Open the URL shown in the terminal (typically `http://localhost:5173`).
+2. **Run local dev server**:
+   ```bash
+   npm run dev
+   ```
+   Open the URL shown in the terminal (typically `http://localhost:5173`).
 
-## Build for Production
+---
 
-```bash
-npm run build
-npm run preview
-```
+## Desktop Application Build (Electron)
+
+You can run or package this tracker as a standalone local desktop application:
+
+*   **Run Desktop App in Dev Mode**:
+    ```bash
+    npm run electron:dev
+    ```
+*   **Build Standalone Desktop Bundle**:
+    ```bash
+    npm run electron:build
+    ```
+    This compiles the production assets and outputs a portable Windows executable (`Masters Journey Tracker.exe`) inside the `dist-desktop/` folder.
+
+---
 
 ## Data Persistence
 
-All profile data, bookmarks, roadmaps, and Kanban positions are saved to `localStorage` under the key `masters-journey-tracker`. Your data survives browser refreshes and tab closures.
+All profile details, semester grades, project portfolios, and Kanban cards are saved to browser `localStorage` keyed under your custom Profile User ID. No cloud login required.
 
 ## Tech Stack
 
-- React 18
-- Vite 6
-- pdfjs-dist (client-side PDF text extraction)
-- Vanilla CSS (dark academic theme)
-- Browser LocalStorage
+- **Frontend**: React 18, Vite 6
+- **Desktop Wrapper**: Electron 42, Electron Packager
+- **PDF Engine**: `pdfjs-dist` (client-side PDF text extraction)
+- **Styling**: Vanilla CSS (Premium dark academic theme)
+- **Storage**: Browser LocalStorage
