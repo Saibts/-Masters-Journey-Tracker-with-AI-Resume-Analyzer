@@ -686,3 +686,63 @@ export function matchColleges(profile) {
     return b.matchScore - a.matchScore;
   });
 }
+
+export const JOB_OPPORTUNITIES = {
+  'Robotics and Automation': {
+    globalOpenings: '145,000+ active roles',
+    employmentChance: '92% within 6 months',
+    popularRoles: ['Robotics Developer (ROS2)', 'Automation & Control Specialist', 'Mechatronics Integration Engineer', 'Computer Vision/SLAM Engineer'],
+    topSectors: ['Advanced Logistics', 'Automotive/EV Manufacturing', 'Aerospace', 'Surgical & Medical Robotics'],
+    marketTrend: 'Rapid Growth (+16% YoY) - Driven by collaborative robots (Cobots) and autonomous warehouse fleets in 2026'
+  },
+  'Mechanical Engineering': {
+    globalOpenings: '270,000+ active roles',
+    employmentChance: '88% within 6 months',
+    popularRoles: ['Mechanical Design Engineer', 'Finite Element Analysis (FEA) Specialist', 'Thermal Management Engineer', 'EV Powertrain Designer'],
+    topSectors: ['Automotive & EV Plants', 'Renewable Energy Systems', 'Heavy Machinery', 'Aerospace & Defense'],
+    marketTrend: 'Steady Growth (+7% YoY) - Spurred by transition to electric vehicle powertrains & hydrogen fuel systems in 2026'
+  },
+  'Electronics and Communication Engineering': {
+    globalOpenings: '240,000+ active roles',
+    employmentChance: '90% within 6 months',
+    popularRoles: ['Embedded Systems Firmware Engineer', 'VLSI Design Engineer', 'RF/Wireless Engineer', 'IoT Sensor Specialist'],
+    topSectors: ['Semiconductors', 'Telecommunications & 5G/6G Networks', 'Consumer Electronics', 'Industrial IoT'],
+    marketTrend: 'Strong Growth (+11% YoY) - Dominated by semiconductor self-reliance projects and global 6G testing in 2026'
+  },
+  'Production Engineering': {
+    globalOpenings: '110,000+ active roles',
+    employmentChance: '84% within 6 months',
+    popularRoles: ['Production Systems Engineer', 'Operations & Logistics Manager', 'Quality Control Analyst', 'Process Optimization Specialist'],
+    topSectors: ['Automated Manufacturing', 'Supply Chain Hubs', 'Chemical & Process Plants', 'Steel & Metallurgy'],
+    marketTrend: 'Stable (+5% YoY) - Shift towards AI-driven factory predictive maintenance and digital twins in 2026'
+  },
+  'AI/DS': {
+    globalOpenings: '480,000+ active roles',
+    employmentChance: '97% within 6 months',
+    popularRoles: ['Generative AI Engineer', 'MLOps Architect', 'NLP/LLM Fine-Tuning Specialist', 'Agentic AI Systems Developer'],
+    topSectors: ['Tech Platforms', 'FinTech & Quantitative Finance', 'Healthcare & Bioinformatics', 'Autonomous Mobility'],
+    marketTrend: 'Exponential Growth (+31% YoY) - Surge in agentic workflows, multi-modal model deployment, and local edge-AI in 2026'
+  },
+  'Computer Science Engineering': {
+    globalOpenings: '520,000+ active roles',
+    employmentChance: '96% within 6 months',
+    popularRoles: ['Full-Stack Software Engineer', 'Cloud-Native Solutions Architect', 'Rust/Go Systems Programmer', 'Zero-Trust Cybersecurity Engineer'],
+    topSectors: ['Enterprise Software', 'Financial Technology', 'SaaS Platforms', 'Web3 & Decentralized Infrastructure'],
+    marketTrend: 'Very Strong Growth (+19% YoY) - Focused on decentralized tech, WebAssembly, and zero-trust security structures in 2026'
+  },
+  'Information Technology (IT)': {
+    globalOpenings: '410,000+ active roles',
+    employmentChance: '92% within 6 months',
+    popularRoles: ['DevOps & Platform Engineer', 'Cloud Systems Administrator', 'Database Reliability Engineer', 'IT Operations Manager'],
+    topSectors: ['IT Services & Managed Consulting', 'Corporate Cloud Platforms', 'Financial Services', 'E-commerce Platforms'],
+    marketTrend: 'Strong Growth (+12% YoY) - High demand for hybrid-cloud deployments and AI-driven automated IT operations (AIOps) in 2026'
+  },
+  'Rubber and Plastics Technology': {
+    globalOpenings: '52,000+ active roles',
+    employmentChance: '80% within 6 months',
+    popularRoles: ['Bio-plastics & Polymers Engineer', 'Polymer Synthesis Scientist', 'Elastomer Research Specialist', 'Plastics Injection Mould Designer'],
+    topSectors: ['Automotive Material Supply', 'Eco-friendly Packaging Industry', 'Tire Manufacturing', 'Consumer Goods'],
+    marketTrend: 'Moderate Growth (+4.5% YoY) - Powered by sustainable bio-polymers and carbon-neutral packaging regulations in 2026'
+  }
+};
+

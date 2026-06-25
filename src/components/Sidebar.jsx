@@ -8,7 +8,7 @@ const ALL_NAV_ITEMS = [
   { id: 'tracker', label: 'Application Tracker', icon: '▦' },
 ];
 
-export default function Sidebar({ activeTab, onTabChange, currentUser, onLogout, portal, onSwitchPortal, theme, onToggleTheme }) {
+export default function Sidebar({ activeTab, onTabChange, currentUser, onLogout, portal, onSwitchPortal, theme, onToggleTheme, isOpen, onClose }) {
   const filteredItems = ALL_NAV_ITEMS.filter((item) => {
     if (portal === 'academic') {
       return ['academic', 'projects', 'dashboard'].includes(item.id);
@@ -17,7 +17,8 @@ export default function Sidebar({ activeTab, onTabChange, currentUser, onLogout,
   });
 
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
+      <button className="sidebar-close-btn" onClick={onClose} aria-label="Close sidebar">✕</button>
       <div className="sidebar-brand">
         <span className="brand-icon">🎓</span>
         <div>

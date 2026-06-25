@@ -15,16 +15,16 @@ function readTextFile(file) {
 async function readPdfFile(file) {
   const arrayBuffer = await file.arrayBuffer();
   const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-  const pages = [];
-
-  for (let i = 1; i <= pdf.numPages; i++) {
-    const page = await pdf.getPage(i);
+  
+  const pagePromises = Array.from({ length: pdf.numPages }, async (_, index) => {
+    const pageNum = index + 1;
+    const page = await pdf.getPage(pageNum);
     const content = await page.getTextContent();
-    const pageText = content.items.map((item) => item.str).join(' ');
-    pages.push(pageText);
-  }
+    return content.items.map((item) => item.str).join(' ');
+  });
 
-  return pages.join('\n');
+  const pagesText = await Promise.all(pagePromises);
+  return pagesText.join('\n');
 }
 
 function readDataUrl(file) {

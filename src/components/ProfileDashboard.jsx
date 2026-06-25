@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { FUNDING_OPTIONS, DEFAULT_PROFILE, COUNTRIES, cgpaToUsEquivalent } from '../data/constants';
-import { saveProfile } from '../utils/storage';
+import { FUNDING_OPTIONS, DEFAULT_PROFILE, COUNTRIES, cgpaToUsEquivalent, JOB_OPPORTUNITIES } from '../data/constants';
+import { saveProfile, importState } from '../utils/storage';
 import ResumeUpload from './ResumeUpload';
 import StrengthsGapsChecklist from './StrengthsGapsChecklist';
 
@@ -70,6 +70,7 @@ export default function ProfileDashboard({ state, matchedColleges, onStateChange
   const usGpa = cgpaToUsEquivalent(form.cgpa || profile?.cgpa);
   const topMatches = matchedColleges.filter((c) => c.isRecommended).slice(0, 4);
   const scholarshipMatches = matchedColleges.filter((c) => c.highScholarshipChance);
+  const courseJobs = profile ? JOB_OPPORTUNITIES[profile.currentCourse] : null;
 
   if (!profile) {
     return (
@@ -250,6 +251,45 @@ export default function ProfileDashboard({ state, matchedColleges, onStateChange
               )}
             </div>
 
+            {courseJobs && (
+              <div className="dashboard-card card job-outlook-card">
+                <h3>💼 Career & Job Opportunities Outlook</h3>
+                <p className="card-desc" style={{ marginBottom: '1.25rem' }}>
+                  Market analysis and employment stats for <strong>{profile.currentCourse}</strong>
+                </p>
+                <div className="stats-row" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '1rem', marginBottom: '1rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
+                  <div className="stat">
+                    <span className="stat-value" style={{ fontSize: '1.4rem', color: 'var(--accent-teal)' }}>{courseJobs.globalOpenings}</span>
+                    <span className="stat-label">Global Active Openings</span>
+                  </div>
+                  <div className="stat">
+                    <span className="stat-value" style={{ fontSize: '1.4rem', color: 'var(--accent-teal)' }}>{courseJobs.employmentChance}</span>
+                    <span className="stat-label">Employment Chance</span>
+                  </div>
+                  <div className="stat">
+                    <span className="stat-value" style={{ fontSize: '1.1rem' }}>{courseJobs.marketTrend}</span>
+                    <span className="stat-label">Market Trend</span>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  <div>
+                    <span className="stat-label" style={{ display: 'block', fontSize: '0.8rem', opacity: 0.8, marginBottom: '0.25rem' }}>Top Hiring Sectors</span>
+                    <span style={{ fontSize: '0.9rem', fontWeight: '500' }}>{courseJobs.topSectors.join(', ')}</span>
+                  </div>
+                  <div>
+                    <span className="stat-label" style={{ display: 'block', fontSize: '0.8rem', opacity: 0.8, marginBottom: '0.4rem' }}>In-Demand Roles</span>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+                      {courseJobs.popularRoles.map((role, idx) => (
+                        <span key={idx} className="badge" style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border)', fontSize: '0.75rem', padding: '0.2rem 0.5rem', borderRadius: '4px' }}>
+                          {role}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {portal !== 'academic' && scholarshipMatches.length > 0 && (
               <div className="dashboard-card card highlight-card">
                 <h3>🏆 High Scholarship Potential</h3>
@@ -300,21 +340,80 @@ export default function ProfileDashboard({ state, matchedColleges, onStateChange
       )}
 
       {profile && !isEditing && (
-        <div style={{ marginTop: '2.5rem', borderTop: '1px solid var(--border)', paddingTop: '2rem' }}>
-          <div className="card" style={{ borderColor: 'rgba(239, 68, 68, 0.4)', background: 'rgba(239, 68, 68, 0.03)', padding: '1.5rem', borderRadius: '8px' }}>
-            <h3 style={{ color: '#ef4444', display: 'flex', alignItems: 'center', gap: '0.5rem', margin: '0 0 0.5rem 0' }}>
-              ⚠️ Danger Zone
-            </h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: '0 0 1rem 0', lineHeight: '1.5' }}>
-              Permanently delete this user profile and all associated data (including academic grades, roadmaps, and bookmarked colleges) from this browser. This action cannot be undone.
-            </p>
-            <button 
-              onClick={onDeleteProfile} 
-              className="btn" 
-              style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '0.6rem 1.2rem', cursor: 'pointer', fontWeight: 'bold' }}
-            >
-              Delete Profile
-            </button>
+        <div className="dashboard-danger-backup-grid" style={{ marginTop: '2.5rem', borderTop: '1px solid var(--border)', paddingTop: '2rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+            
+            <div className="card" style={{ padding: '1.5rem', borderRadius: '8px' }}>
+              <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', margin: '0 0 0.5rem 0' }}>
+                💾 Backup & Restore
+              </h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: '0 0 1rem 0', lineHeight: '1.5' }}>
+                Export your profile, roadmaps, and bookmarked colleges to a JSON file, or restore them from a backup.
+              </p>
+              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                <button 
+                  onClick={() => {
+                    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
+                    const downloadAnchor = document.createElement('a');
+                    downloadAnchor.setAttribute("href", dataStr);
+                    downloadAnchor.setAttribute("download", `${profile.fullName || 'profile'}_masters_tracker_backup.json`);
+                    document.body.appendChild(downloadAnchor);
+                    downloadAnchor.click();
+                    downloadAnchor.remove();
+                  }}
+                  className="btn btn-secondary"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
+                >
+                  📥 Export Backup
+                </button>
+                
+                <label className="btn btn-secondary" style={{ cursor: 'pointer', margin: 0, display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+                  📤 Import Backup
+                  <input 
+                    type="file" 
+                    accept=".json" 
+                    style={{ display: 'none' }} 
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      const reader = new FileReader();
+                      reader.onload = (event) => {
+                        try {
+                          const importedData = JSON.parse(event.target.result);
+                          if (importedData && importedData.profile) {
+                            importState(importedData);
+                            onStateChange();
+                            alert('Backup restored successfully!');
+                          } else {
+                            alert('Invalid backup file structure: missing profile data.');
+                          }
+                        } catch (err) {
+                          alert('Failed to parse backup JSON file.');
+                        }
+                      };
+                      reader.readAsText(file);
+                    }}
+                  />
+                </label>
+              </div>
+            </div>
+
+            <div className="card" style={{ borderColor: 'rgba(239, 68, 68, 0.4)', background: 'rgba(239, 68, 68, 0.03)', padding: '1.5rem', borderRadius: '8px' }}>
+              <h3 style={{ color: '#ef4444', display: 'flex', alignItems: 'center', gap: '0.5rem', margin: '0 0 0.5rem 0' }}>
+                ⚠️ Danger Zone
+              </h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: '0 0 1rem 0', lineHeight: '1.5' }}>
+                Permanently delete this user profile and all associated data (including academic grades, roadmaps, and bookmarked colleges) from this browser. This action cannot be undone.
+              </p>
+              <button 
+                onClick={onDeleteProfile} 
+                className="btn" 
+                style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '0.6rem 1.2rem', cursor: 'pointer', fontWeight: 'bold' }}
+              >
+                Delete Profile
+              </button>
+            </div>
+
           </div>
         </div>
       )}

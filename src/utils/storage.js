@@ -130,3 +130,25 @@ export function saveActiveTab(tab) {
   state.activeTab = tab;
   saveState(state);
 }
+
+export function importState(importedState) {
+  const userId = getCurrentUser();
+  if (!userId) return null;
+  const userKey = `${STORAGE_KEY}_${userId}`;
+  const defaults = createDefaultState();
+  const state = {
+    ...defaults,
+    ...importedState,
+    profile: importedState.profile || null,
+    bookmarks: importedState.bookmarks || [],
+    roadmaps: importedState.roadmaps || {},
+    kanban: {
+      ...defaults.kanban,
+      ...(importedState.kanban || {}),
+    },
+    researchPapers: importedState.researchPapers || [],
+  };
+  localStorage.setItem(userKey, JSON.stringify(state));
+  return state;
+}
+
