@@ -71,7 +71,7 @@ export default function Sidebar({ activeTab, onTabChange, currentUser, onLogout,
         <p className="storage-badge">💾 LocalStorage Active</p>
         {currentUser && (
           <button className="logout-btn" onClick={onLogout}>
-            ↳ Switch Profile
+            ↳ Log Out
           </button>
         )}
       </div>

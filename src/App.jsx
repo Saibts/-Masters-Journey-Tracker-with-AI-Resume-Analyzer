@@ -153,7 +153,7 @@ export default function App() {
 
         <div style={{ textAlign: 'center', marginTop: '3rem' }}>
           <button className="btn btn-ghost" onClick={handleLogout}>
-            ↳ Switch Profile / Log Out
+            ↳ Log Out
           </button>
         </div>
       </div>
