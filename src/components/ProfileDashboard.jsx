@@ -24,7 +24,7 @@ function ProfileField({ label, value, children, isEditing }) {
   );
 }
 
-export default function ProfileDashboard({ state, matchedColleges, onStateChange, portal }) {
+export default function ProfileDashboard({ state, matchedColleges, onStateChange, portal, onDeleteProfile }) {
   const [isEditing, setIsEditing] = useState(false);
   const [form, setForm] = useState(DEFAULT_PROFILE);
   const profile = state.profile;
@@ -297,6 +297,26 @@ export default function ProfileDashboard({ state, matchedColleges, onStateChange
             )}
           </div>
         </>
+      )}
+
+      {profile && !isEditing && (
+        <div style={{ marginTop: '2.5rem', borderTop: '1px solid var(--border)', paddingTop: '2rem' }}>
+          <div className="card" style={{ borderColor: 'rgba(239, 68, 68, 0.4)', background: 'rgba(239, 68, 68, 0.03)', padding: '1.5rem', borderRadius: '8px' }}>
+            <h3 style={{ color: '#ef4444', display: 'flex', alignItems: 'center', gap: '0.5rem', margin: '0 0 0.5rem 0' }}>
+              ⚠️ Danger Zone
+            </h3>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: '0 0 1rem 0', lineHeight: '1.5' }}>
+              Permanently delete this user profile and all associated data (including academic grades, roadmaps, and bookmarked colleges) from this browser. This action cannot be undone.
+            </p>
+            <button 
+              onClick={onDeleteProfile} 
+              className="btn" 
+              style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '0.6rem 1.2rem', cursor: 'pointer', fontWeight: 'bold' }}
+            >
+              Delete Profile
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

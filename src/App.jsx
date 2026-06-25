@@ -76,6 +76,14 @@ export default function App() {
     localStorage.removeItem('masters-journey-tracker-portal');
   };
 
+  const handleDeleteProfile = () => {
+    if (window.confirm("Are you sure you want to permanently delete your profile and all local data? This action cannot be undone.")) {
+      const storageKeyForUser = `masters-journey-tracker_${currentUser}`;
+      localStorage.removeItem(storageKeyForUser);
+      handleLogout();
+    }
+  };
+
   const selectPortal = (selected) => {
     setPortal(selected);
     localStorage.setItem('masters-journey-tracker-portal', selected);
@@ -172,6 +180,7 @@ export default function App() {
           matchedColleges={matchedColleges}
           onStateChange={refreshState}
           portal={portal}
+          onDeleteProfile={handleDeleteProfile}
         />
       </main>
     </div>
