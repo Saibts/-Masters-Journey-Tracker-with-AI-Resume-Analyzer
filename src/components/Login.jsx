@@ -1,20 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export default function Login({ onLogin }) {
   const [userIdInput, setUserIdInput] = useState('');
-  const [knownUsers, setKnownUsers] = useState([]);
   const [error, setError] = useState('');
-
-  useEffect(() => {
-    try {
-      const rawList = localStorage.getItem('masters-journey-tracker-user-list');
-      if (rawList) {
-        setKnownUsers(JSON.parse(rawList));
-      }
-    } catch (e) {
-      console.error('Failed to load user list', e);
-    }
-  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -28,23 +16,8 @@ export default function Login({ onLogin }) {
       return;
     }
 
-    // Add to known users if not present
-    const updatedUsers = [...new Set([...knownUsers, trimmed])];
-    localStorage.setItem('masters-journey-tracker-user-list', JSON.stringify(updatedUsers));
-    
+    // Directly log in the user without storing or displaying a public directory of other usernames
     onLogin(trimmed);
-  };
-
-  const handleSelectUser = (user) => {
-    onLogin(user);
-  };
-
-  const handleDeleteUser = (e, userToDelete) => {
-    e.stopPropagation();
-    const updated = knownUsers.filter(u => u !== userToDelete);
-    setKnownUsers(updated);
-    localStorage.setItem('masters-journey-tracker-user-list', JSON.stringify(updated));
-    // Also clean up that user's data if desired, or keep it. Let's just remove from listed users for UI simplicity.
   };
 
   return (
@@ -52,17 +25,17 @@ export default function Login({ onLogin }) {
       <div className="login-card">
         <div className="login-header">
           <div className="login-logo">🎓</div>
-          <h2>Masters Journey Tracker</h2>
-          <p>Your personal roadmap to global academic excellence</p>
+          <h2>Masters Journey & Academics Tracker</h2>
+          <p>Your personal roadmap to academic excellence</p>
         </div>
 
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
-            <label htmlFor="userId">Enter User ID / Name</label>
+            <label htmlFor="userId">Enter Your Private User ID</label>
             <input
               id="userId"
               type="text"
-              placeholder="e.g., alex_robotics"
+              placeholder="Enter your unique profile key..."
               value={userIdInput}
               onChange={(e) => {
                 setUserIdInput(e.target.value);
@@ -70,43 +43,40 @@ export default function Login({ onLogin }) {
               }}
               autoFocus
               className="login-input"
+              style={{
+                background: 'var(--bg-deep)',
+                border: '1px solid var(--border)',
+                borderRadius: '6px',
+                color: 'inherit',
+                padding: '0.75rem',
+                width: '100%',
+                fontSize: '1rem',
+                marginTop: '0.5rem'
+              }}
             />
-            {error && <span className="login-error">{error}</span>}
+            {error && <span className="login-error" style={{ color: '#ef4444', fontSize: '0.8rem', marginTop: '0.25rem', display: 'block' }}>{error}</span>}
           </div>
 
-          <button type="submit" className="login-btn">
-            Sign In / Create Profile
+          <button type="submit" className="login-btn" style={{
+            background: 'var(--accent-teal)',
+            color: '#000',
+            border: 'none',
+            borderRadius: '6px',
+            padding: '0.75rem',
+            width: '100%',
+            fontWeight: 'bold',
+            fontSize: '1rem',
+            cursor: 'pointer',
+            marginTop: '1rem',
+            transition: 'background 0.2s'
+          }}>
+            Sign In / Access Profile
           </button>
         </form>
 
-        {knownUsers.length > 0 && (
-          <div className="known-users-section">
-            <h3>Or switch to an existing profile:</h3>
-            <div className="known-users-list">
-              {knownUsers.map((user) => (
-                <div
-                  key={user}
-                  className="known-user-item"
-                  onClick={() => handleSelectUser(user)}
-                >
-                  <span className="user-icon">🤖</span>
-                  <span className="user-name">{user}</span>
-                  <button
-                    className="delete-user-btn"
-                    onClick={(e) => handleDeleteUser(e, user)}
-                    title="Remove profile from list"
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <div className="login-footer">
-          <span>🔒 Fully Private & Local</span>
-          <p>All data is stored directly in your browser's LocalStorage</p>
+        <div className="login-footer" style={{ marginTop: '2rem', textAlign: 'center', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+          <span>🔒 100% Private, Secure & Local</span>
+          <p style={{ marginTop: '0.25rem' }}>Your profile key loads your local data. Other members cannot view your key or access your records.</p>
         </div>
       </div>
     </div>
