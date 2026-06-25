@@ -5,7 +5,7 @@ function createWindow() {
   const win = new BrowserWindow({
     width: 1200,
     height: 800,
-    title: "Masters Journey Tracker",
+    title: "Gradix | Masters & Academics Tracker",
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,

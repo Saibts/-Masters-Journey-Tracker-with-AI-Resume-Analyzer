@@ -22,11 +22,9 @@ export default function Sidebar({ activeTab, onTabChange, currentUser, onLogout,
       <div className="sidebar-brand">
         <span className="brand-icon">🎓</span>
         <div>
-          <span className="brand-title">
-            {portal === 'academic' ? 'Academic' : 'Masters'}
-          </span>
+          <span className="brand-title">Gradix</span>
           <span className="brand-subtitle">
-            {portal === 'academic' ? 'Portal' : 'Journey Tracker'}
+            {portal === 'academic' ? 'Academic Portal' : 'Masters Tracker'}
           </span>
         </div>
       </div>

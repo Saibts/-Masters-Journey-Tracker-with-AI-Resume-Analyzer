@@ -1,6 +1,6 @@
-ABOUT: MASTERS & ACADEMICS TRACKER
+ABOUT: GRADIX (MASTERS & ACADEMICS TRACKER)
 
-The Masters & Academics Tracker is a premium, client-side, local-first web application designed for students managing undergraduate coursework and planning higher education journeys abroad. Built with a focus on absolute privacy, security, and a rich vintage aesthetic, it offers a personal workspace that runs entirely in the browser.
+Gradix (the Masters & Academics Tracker) is a premium, client-side, local-first web application designed for students managing undergraduate coursework and planning higher education journeys abroad. Built with a focus on absolute privacy, security, and a rich vintage aesthetic, it offers a personal workspace that runs entirely in the browser.
 
 ========================================================================
 1. CORE PORTALS

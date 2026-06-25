@@ -1,4 +1,4 @@
-# My Masters Journey & Academics Tracker
+# Gradix | Masters & Academics Tracker
 
 A private, local-first React application for tracking your master's application journey abroad while managing your undergraduate academics. All data is processed and stored locally in your browser via **LocalStorage** — your resumes and transcripts are never sent to a server.
 
