@@ -34,9 +34,19 @@ Designed for higher education planning, international university discovery, and 
 * Danger Zone Deletion: Dedicated account deletion permanently purges all profile metrics, grades, and application roadmaps from the local browser storage.
 
 ========================================================================
-3. THEME & VINTAGE AESTHETICS
+3. SECURITY AUDIT & PRIVACY ASSURANCE
+========================================================================
+
+A codebase-wide security audit confirms the following protections:
+
+* Zero Outgoing Network Traffic: No external network libraries (such as Axios) or native browser fetch calls are present in the core application logic. 
+* Rule-Based Resume Intelligence: The parsing engine runs entirely in the client-side JavaScript runtime using pdfjs-dist. All keyword classification and skill-gap mappings are performed locally via predefined rule sets rather than delegating to cloud-based LLM APIs or external AI engines.
+* Zero Leakage to AI/Resources: Because the app is completely self-contained and network-free, no private user metrics, profile data, or document contents are ever transmitted to any external AI services or databases.
+
+========================================================================
+4. THEME & VINTAGE AESTHETICS
 ========================================================================
 
 Designed with a focus on rich visual excellence, the application includes a theme toggling feature located in the sidebar:
-* Vintage Dark Academia (Default): Deep, rich mahogany wood backdrops (#110d0a), candlelit parchment text (#eae3cd), and burnished gold accents (#c5a059).
+* Vintage Dark Academia (Default): Deep, rich charcoal wood backdrops (#110d0a), candlelit parchment text (#eae3cd), and burnished gold accents (#c5a059).
 * Vintage Light Academia (Parchment): Softer tea-stained paper tones (#eae4d3), sepia writing pads (#f4eee1), and walnut-ink lettering (#3c3024) for a bright, glare-free daylight study aesthetic.
