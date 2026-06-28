@@ -3,12 +3,43 @@ import { LOADING_STEPS, processResumeUpload } from '../utils/resumeParser';
 import { analyzeResume, mergeResumeIntoProfile } from '../utils/resumeAnalysis';
 import { saveProfile } from '../utils/storage';
 
+function highlightText(text, keywords) {
+  if (!text || !keywords || keywords.length === 0) return text;
+
+  // Escape special regex characters in keywords
+  const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+  // Sort keywords by length descending so longer keywords are matched first
+  const sortedKeywords = [...keywords].sort((a, b) => b.length - a.length);
+
+  // Build lookaround-based regex pattern to match whole keywords only
+  const pattern = sortedKeywords
+    .map(kw => {
+      const escaped = escapeRegExp(kw);
+      const startBoundary = /^[a-zA-Z0-9]/.test(kw) ? '(?<![a-zA-Z0-9])' : '';
+      const endBoundary = /[a-zA-Z0-9]$/.test(kw) ? '(?![a-zA-Z0-9])' : '';
+      return `${startBoundary}${escaped}${endBoundary}`;
+    })
+    .join('|');
+
+  if (!pattern) return text;
+
+  const regex = new RegExp(`(${pattern})`, 'gi');
+  const parts = text.split(regex);
+
+  return parts.map((part, index) => {
+    const isMatch = sortedKeywords.some(kw => kw.toLowerCase() === part.toLowerCase());
+    return isMatch ? <mark key={index} className="highlighted-keyword">{part}</mark> : part;
+  });
+}
+
 export default function ResumeUpload({ profile, onStateChange }) {
   const [isDragging, setIsDragging] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [error, setError] = useState(null);
   const [lastResult, setLastResult] = useState(null);
+  const [showPreview, setShowPreview] = useState(false);
   const inputRef = useRef(null);
 
   const handleUpload = useCallback(async (file) => {
@@ -178,6 +209,33 @@ export default function ResumeUpload({ profile, onStateChange }) {
               <span key={kw} className="keyword-chip">{kw}</span>
             ))}
           </div>
+        </div>
+      )}
+
+      {profile.resumeText && !isProcessing && (
+        <div className="resume-preview-section">
+          <button 
+            type="button" 
+            className="btn btn-secondary" 
+            style={{ fontSize: '0.8rem', padding: '0.35rem 0.75rem', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
+            onClick={() => setShowPreview(!showPreview)}
+          >
+            {showPreview ? '🙈 Hide Resume Preview' : '👁️ Show Resume Preview'}
+          </button>
+          
+          {showPreview && (
+            <div className="resume-preview-card">
+              <h4 className="keywords-label" style={{ marginTop: '0' }}>
+                📄 Resume Document Text View & Highlights
+              </h4>
+              <p className="card-desc" style={{ fontSize: '0.8rem', marginBottom: '0.75rem', color: 'var(--text-muted)' }}>
+                Extracted text is shown below. Detected academic/engineering keywords are highlighted.
+              </p>
+              <div className="resume-text-view">
+                {highlightText(profile.resumeText, profile.extractedKeywords || [])}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

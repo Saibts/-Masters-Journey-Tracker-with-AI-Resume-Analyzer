@@ -3,6 +3,8 @@ import { FUNDING_OPTIONS, DEFAULT_PROFILE, COUNTRIES, cgpaToUsEquivalent, JOB_OP
 import { saveProfile, importState } from '../utils/storage';
 import ResumeUpload from './ResumeUpload';
 import StrengthsGapsChecklist from './StrengthsGapsChecklist';
+import { processResumeUpload } from '../utils/resumeParser';
+import { analyzeResume, mergeResumeIntoProfile } from '../utils/resumeAnalysis';
 
 const COURSE_OPTIONS = [
   'Robotics and Automation',
@@ -35,8 +37,24 @@ export default function ProfileDashboard({ state, matchedColleges, onStateChange
     }
   }, [profile]);
 
+  const [isParsingResume, setIsParsingResume] = useState(false);
+
   const handleChange = (field, value) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
+    setForm((prev) => {
+      const updated = { ...prev, [field]: value };
+      if (field === 'currentCourse' && prev.resumeText) {
+        // Re-analyze resume with the new course and update strengths/gaps/ATS score
+        const analysis = analyzeResume(prev.resumeText, value);
+        return {
+          ...updated,
+          resumeStrengths: analysis.resumeStrengths,
+          resumeGaps: analysis.resumeGaps,
+          atsScore: analysis.atsScore,
+          aiRecommendations: analysis.aiRecommendations,
+        };
+      }
+      return updated;
+    });
   };
 
   const handleCountryToggle = (country) => {
@@ -47,18 +65,28 @@ export default function ProfileDashboard({ state, matchedColleges, onStateChange
     handleChange('targetCountries', updated);
   };
 
-  const handleFileUpload = (e) => {
+  const handleFileUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      setForm((prev) => ({
-        ...prev,
-        resumeFileName: file.name,
-        resumeDataUrl: ev.target.result,
-      }));
-    };
-    reader.readAsDataURL(file);
+
+    const extension = file.name.split('.').pop()?.toLowerCase();
+    if (!['pdf', 'txt'].includes(extension)) {
+      alert('Please upload a .pdf or .txt file.');
+      return;
+    }
+
+    setIsParsingResume(true);
+    try {
+      // Parse file using the common loader
+      const resumeData = await processResumeUpload(file, () => {});
+      const analysis = analyzeResume(resumeData.text, form.currentCourse);
+      
+      setForm((prev) => mergeResumeIntoProfile(prev, resumeData, analysis));
+    } catch (err) {
+      alert(err?.message || 'Failed to parse resume.');
+    } finally {
+      setIsParsingResume(false);
+    }
   };
 
   const handleSave = () => {
@@ -97,6 +125,7 @@ export default function ProfileDashboard({ state, matchedColleges, onStateChange
               usGpa={usGpa}
               setIsEditing={setIsEditing}
               hasProfile={false}
+              isParsingResume={isParsingResume}
             />
           </div>
         )}
@@ -126,6 +155,7 @@ export default function ProfileDashboard({ state, matchedColleges, onStateChange
             usGpa={usGpa}
             setIsEditing={setIsEditing}
             hasProfile={!!profile}
+            isParsingResume={isParsingResume}
           />
         ) : (
           <div className="profile-readonly">
@@ -421,7 +451,7 @@ export default function ProfileDashboard({ state, matchedColleges, onStateChange
   );
 }
 
-function ProfileForm({ form, handleChange, handleCountryToggle, handleFileUpload, handleSave, usGpa, setIsEditing, hasProfile }) {
+function ProfileForm({ form, handleChange, handleCountryToggle, handleFileUpload, handleSave, usGpa, setIsEditing, hasProfile, isParsingResume }) {
   return (
     <div className="profile-form">
       <div className="form-grid">
@@ -598,11 +628,25 @@ function ProfileForm({ form, handleChange, handleCountryToggle, handleFileUpload
         <div className="form-group full-width">
           <label>My Resume / CV</label>
           <div className="file-upload">
-            <input type="file" accept=".pdf,.txt" onChange={handleFileUpload} id="resume-upload" />
-            <label htmlFor="resume-upload" className="file-upload-label">
-              {form.resumeFileName ? `📄 ${form.resumeFileName}` : '📎 Upload Resume/CV (PDF, TXT)'}
+            <input 
+              type="file" 
+              accept=".pdf,.txt" 
+              onChange={handleFileUpload} 
+              id="resume-upload" 
+              disabled={isParsingResume} 
+            />
+            <label 
+              htmlFor="resume-upload" 
+              className={`file-upload-label ${isParsingResume ? 'disabled' : ''}`}
+              style={{ opacity: isParsingResume ? 0.7 : 1, cursor: isParsingResume ? 'not-allowed' : 'pointer' }}
+            >
+              {isParsingResume ? '⏳ Parsing & Analyzing Resume...' : (form.resumeFileName ? `📄 ${form.resumeFileName}` : '📎 Upload Resume/CV (PDF, TXT)')}
             </label>
-            <p className="form-hint">For full parsing & gap analysis, use the Resume Intelligence Engine on the dashboard.</p>
+            <p className="form-hint">
+              {isParsingResume 
+                ? 'Extracting keywords, calculating ATS score, and analyzing skill gaps...' 
+                : 'Resume is automatically parsed & analyzed. Keywords, gaps, and matches will update.'}
+            </p>
           </div>
         </div>
       </div>

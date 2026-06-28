@@ -4,8 +4,8 @@ const RESEARCH_TOKENS = ['ieee', 'publication', 'journal', 'conference'];
 const PREMIER_TOKENS = ['iit', 'iisc', 'internship', 'fellowship'];
 
 const COURSE_KEYWORDS = {
-  'be robotics and automation': ['ROS', 'Control Systems', 'Robotics', 'C++', 'Path Planning', 'MATLAB'],
-  'be mechanical engineering': ['Control Systems', 'MATLAB', 'Robotics', 'Kinematics', 'Autonomous', 'Linux'],
+  'robotics and automation': ['ROS', 'Control Systems', 'Robotics', 'C++', 'Path Planning', 'MATLAB'],
+  'mechanical engineering': ['Control Systems', 'MATLAB', 'Robotics', 'Kinematics', 'Autonomous', 'Linux'],
   'electronics and communication engineering': ['Embedded Systems', 'C++', 'Control Systems', 'Arduino', 'Linux', 'Sensor Fusion'],
   'production engineering': ['Control Systems', 'Robotics', 'MATLAB', 'Arduino', 'PLC', 'Linux'],
   'ai/ds': ['Machine Learning', 'Python', 'Deep Learning', 'PyTorch', 'TensorFlow', 'Neural Networks'],
@@ -15,14 +15,23 @@ const COURSE_KEYWORDS = {
 };
 
 export function extractKeywords(text) {
-  const lower = text.toLowerCase();
-  return ENGINEERING_KEYWORDS.filter((keyword) => lower.includes(keyword.toLowerCase()));
+  if (!text) return [];
+  return ENGINEERING_KEYWORDS.filter((keyword) => {
+    const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const startBoundary = /^[a-zA-Z0-9]/.test(keyword) ? '(?<![a-zA-Z0-9])' : '';
+    const endBoundary = /[a-zA-Z0-9]$/.test(keyword) ? '(?![a-zA-Z0-9])' : '';
+    const regex = new RegExp(`${startBoundary}${escaped}${endBoundary}`, 'i');
+    return regex.test(text);
+  });
 }
 
 export function detectGaps(text, foundKeywords, currentCourse = '') {
   const lower = text.toLowerCase();
   const gaps = [];
-  const courseKey = (currentCourse || '').trim().toLowerCase();
+  
+  let courseKey = (currentCourse || '').trim().toLowerCase();
+  // Strip common undergrad degree prefixes for exact major mapping
+  courseKey = courseKey.replace(/^(b\.e\.\s*|be\s+)/i, '');
 
   const hasResearch = RESEARCH_TOKENS.some((token) => lower.includes(token));
   if (!hasResearch) {

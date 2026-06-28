@@ -2290,3 +2290,49 @@ body {
   box-shadow: 0 12px 40px rgba(168, 85, 247, 0.2) !important;
 }
 
+/* Resume Preview and Highlighting */
+.resume-preview-section {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.resume-preview-card {
+  margin-top: 1rem;
+  background: var(--bg-deep);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+}
+
+.resume-text-view {
+  margin-top: 0.75rem;
+  padding: 1rem;
+  background: var(--bg-slate);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  max-height: 400px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  text-align: left;
+}
+
+.highlighted-keyword {
+  background: rgba(197, 160, 89, 0.22); /* Gold glow/amber tint */
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--accent-teal);
+  padding: 0 0.15rem;
+  font-weight: 600;
+  border-radius: 2px;
+}
+
+[data-theme='light'] .highlighted-keyword {
+  background: rgba(166, 124, 82, 0.18);
+  border-bottom-color: var(--accent-teal);
+}
+
+
