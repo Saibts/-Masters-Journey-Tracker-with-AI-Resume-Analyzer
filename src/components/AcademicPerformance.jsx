@@ -541,7 +541,7 @@ export default function AcademicPerformance({ state, onStateChange }) {
                   📜 Save Vintage PDF / Print
                 </button>
                 <button 
-                  className="btn btn-secondary" 
+                  className="btn btn-secondary monochrome-print-btn" 
                   style={{ fontSize: '0.85rem', padding: '0.4rem 0.8rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }} 
                   onClick={() => handlePrint('monochrome')}
                 >
@@ -722,6 +722,13 @@ export default function AcademicPerformance({ state, onStateChange }) {
         @page {
           size: A4 portrait;
           margin: ${isMonochrome ? '20mm 15mm' : '0'};
+        }
+
+        /* Hide Monochrome Print button on mobile viewports */
+        @media (max-width: 768px) {
+          .monochrome-print-btn {
+            display: none !important;
+          }
         }
 
         @media print {
